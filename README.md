@@ -52,6 +52,18 @@ This implementation has been validated locally:
 - Vitest passes with 5 focused checks
 - Local HTTP server responds successfully on the queue page
 
+## Development time
+
+This implementation was done as a focused, minimal viable delivery rather than a long-form production build.
+
+Actual coding and implementation effort for the final solution was approximately 3 hours, excluding earlier project discussion, environment setup, and port-debugging overhead.
+
+This is the useful working estimate to communicate in review notes:
+
+- Core matching logic and data model: ~1.5 hours
+- HTTP server and queue page: ~0.8 hours
+- Validation, replay script, and final verification: ~0.7 hours
+
 ## Scope and constraints
 
 This is intentionally a minimal, review-focused implementation rather than a production-grade platform.

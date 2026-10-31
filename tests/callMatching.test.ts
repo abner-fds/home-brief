@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 
+// 这组测试覆盖了号码规范化、签名校验、客户匹配和状态合并等关键规则。
 import {
   buildCallRecord,
   hashPhoneNumber,
@@ -10,6 +11,7 @@ import {
 } from "../src/callMatching.js";
 
 describe("call matching rules", () => {
+  // 号码标准化应将常见输入格式统一成 E.164 形式，便于后续哈希和比对。
   it("normalizes a U.S. number into E.164 format", () => {
     expect(normalizePhone("(210) 555-0177")).toBe("+12105550177");
     expect(normalizePhone("2105550178")).toBe("+12105550178");

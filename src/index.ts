@@ -8,9 +8,20 @@ import {
   verifySignature,
 } from "./callMatching.js";
 
+// ------------------------------------------------------------
+// 1) 服务配置
+// ------------------------------------------------------------
+// PORT 与 WEBHOOK_SECRET 是运行时的最基础配置：
+// - PORT 决定页面监听在哪个端口
+// - WEBHOOK_SECRET 是签名密钥，必须与发送端一致
 const PORT = Number.parseInt(process.env.PORT ?? "3000", 10);
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET ?? "take-home-secret";
 
+// ------------------------------------------------------------
+// 2) 页面渲染
+// ------------------------------------------------------------
+// renderQueueHtml 会把当前 CALL_STORE 中的所有记录渲染成一个简洁的 HTML 表格，
+// 让 ops 人员在浏览器打开时，快速看到所有待复核的呼叫记录。
 function renderQueueHtml(): string {
   const rows = Array.from(CALL_STORE.values());
   const cells =
@@ -68,6 +79,10 @@ function renderQueueHtml(): string {
   </html>`;
 }
 
+// ------------------------------------------------------------
+// 3) HTTP 路由
+// ------------------------------------------------------------
+// 这里使用原生 Node.js HTTP 模块，不依赖框架，代码更轻，并且更贴近题目的“最小可运行实现”。
 const server = http.createServer((request, response) => {
   const url = new URL(request.url ?? "/", "http://localhost");
 
@@ -123,12 +138,17 @@ const server = http.createServer((request, response) => {
   response.end("not found");
 });
 
+// ------------------------------------------------------------
+// 4) 服务启动
+// ------------------------------------------------------------
+// startServer 负责真正监听端口，供本地开发和演示使用。
 export function startServer(port: number = PORT): void {
   server.listen(port, () => {
     console.log(`Serving call matching queue at http://localhost:${port}`);
   });
 }
 
+// 如果当前文件是由 node 直接执行，而不是作为模块被引用，则自动启动服务器。
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(process.argv[1]).href
