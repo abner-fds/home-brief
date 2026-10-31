@@ -20,7 +20,12 @@ export interface CompanyLine {
 }
 
 export interface MatchResult {
-  status: "matched" | "customer_only" | "internal" | "needs_review" | "unmatched";
+  status:
+    | "matched"
+    | "customer_only"
+    | "internal"
+    | "needs_review"
+    | "unmatched";
   client_id: string | null;
   case_id: string | null;
   reason: string;
@@ -59,8 +64,18 @@ export const DEFAULT_CLIENTS: Client[] = [
       "eb17c0e3b9069a5042236c38fea7ce09a19722d2e1f38ae62a6af577f06a929b",
     ],
     cases: [
-      { case_id: "CASE-9001", status: "closed", opened_at: "2025-01-14", closed_at: "2025-03-02" },
-      { case_id: "CASE-9417", status: "open", opened_at: "2026-06-11", closed_at: null },
+      {
+        case_id: "CASE-9001",
+        status: "closed",
+        opened_at: "2025-01-14",
+        closed_at: "2025-03-02",
+      },
+      {
+        case_id: "CASE-9417",
+        status: "open",
+        opened_at: "2026-06-11",
+        closed_at: null,
+      },
     ],
   },
   {
@@ -70,8 +85,18 @@ export const DEFAULT_CLIENTS: Client[] = [
       "65e5cd5db364b55c145681e2db0975fc30e6831c10fe0d8ccf018122ae2fd723",
     ],
     cases: [
-      { case_id: "CASE-8820", status: "open", opened_at: "2025-11-04", closed_at: null },
-      { case_id: "CASE-9550", status: "closed", opened_at: "2026-07-20", closed_at: "2026-09-01" },
+      {
+        case_id: "CASE-8820",
+        status: "open",
+        opened_at: "2025-11-04",
+        closed_at: null,
+      },
+      {
+        case_id: "CASE-9550",
+        status: "closed",
+        opened_at: "2026-07-20",
+        closed_at: "2026-09-01",
+      },
     ],
   },
   {
@@ -80,7 +105,14 @@ export const DEFAULT_CLIENTS: Client[] = [
     phone_hashes: [
       "1f2bd916d9e93906157a1bd4abfc024b1b64cb83eeef7ebfd1eebacf31065326",
     ],
-    cases: [{ case_id: "CASE-9102", status: "open", opened_at: "2026-02-03", closed_at: null }],
+    cases: [
+      {
+        case_id: "CASE-9102",
+        status: "open",
+        opened_at: "2026-02-03",
+        closed_at: null,
+      },
+    ],
   },
   {
     client_id: "C-104",
@@ -89,7 +121,14 @@ export const DEFAULT_CLIENTS: Client[] = [
       "1f2bd916d9e93906157a1bd4abfc024b1b64cb83eeef7ebfd1eebacf31065326",
       "9b14d1e2164fe73cc354febb883730741e6217f7b685af9ab4403f25c94970a6",
     ],
-    cases: [{ case_id: "CASE-9103", status: "open", opened_at: "2026-02-03", closed_at: null }],
+    cases: [
+      {
+        case_id: "CASE-9103",
+        status: "open",
+        opened_at: "2026-02-03",
+        closed_at: null,
+      },
+    ],
   },
   {
     client_id: "C-105",
@@ -97,7 +136,14 @@ export const DEFAULT_CLIENTS: Client[] = [
     phone_hashes: [
       "ca8c01ad6c7826451572958a5b1eaa41d5b4ad178d837b0769705cef902687cd",
     ],
-    cases: [{ case_id: "CASE-7740", status: "closed", opened_at: "2024-08-19", closed_at: "2025-12-10" }],
+    cases: [
+      {
+        case_id: "CASE-7740",
+        status: "closed",
+        opened_at: "2024-08-19",
+        closed_at: "2025-12-10",
+      },
+    ],
   },
   {
     client_id: "C-106",
@@ -105,13 +151,22 @@ export const DEFAULT_CLIENTS: Client[] = [
     phone_hashes: [
       "060767c859e08016ace3d3821bc002aaecbd295d9afce078030224d2deee2c87",
     ],
-    cases: [{ case_id: "CASE-9612", status: "open", opened_at: "2026-08-28", closed_at: null }],
+    cases: [
+      {
+        case_id: "CASE-9612",
+        status: "open",
+        opened_at: "2026-08-28",
+        closed_at: null,
+      },
+    ],
   },
 ];
 
 export const CALL_STORE = new Map<string, CallRecord>();
 
-export function normalizePhone(value: string | null | undefined): string | null {
+export function normalizePhone(
+  value: string | null | undefined,
+): string | null {
   if (!value) {
     return null;
   }
@@ -129,16 +184,25 @@ export function normalizePhone(value: string | null | undefined): string | null 
   return `+${normalized}`;
 }
 
-export function hashPhoneNumber(number: string | null | undefined): string | null {
+export function hashPhoneNumber(
+  number: string | null | undefined,
+): string | null {
   const normalized = normalizePhone(number);
   if (!normalized) {
     return null;
   }
 
-  return crypto.createHash("sha256").update(normalized.replace(/^\+/, "")).digest("hex");
+  return crypto
+    .createHash("sha256")
+    .update(normalized.replace(/^\+/, ""))
+    .digest("hex");
 }
 
-export function verifySignature(body: Buffer | string, signatureHeader: string | undefined, secret: string): boolean {
+export function verifySignature(
+  body: Buffer | string,
+  signatureHeader: string | undefined,
+  secret: string,
+): boolean {
   if (!signatureHeader || !signatureHeader.startsWith("sha256=")) {
     return false;
   }
@@ -171,7 +235,10 @@ const CALL_FIELDS: Array<keyof CallEvent> = [
   "last_updated_at",
 ];
 
-export function buildCallRecord(existing: Partial<CallRecord> = {}, event: Partial<CallRecord> = {}): CallRecord {
+export function buildCallRecord(
+  existing: Partial<CallRecord> = {},
+  event: Partial<CallRecord> = {},
+): CallRecord {
   const merged: Partial<CallRecord> = { ...existing };
 
   for (const key of CALL_FIELDS) {
@@ -194,7 +261,9 @@ export function getLatestOpenCase(client: Client): ClientCase | null {
     return null;
   }
 
-  openCases.sort((a, b) => (b.opened_at ?? "").localeCompare(a.opened_at ?? ""));
+  openCases.sort((a, b) =>
+    (b.opened_at ?? "").localeCompare(a.opened_at ?? ""),
+  );
   return openCases[0];
 }
 
@@ -205,16 +274,30 @@ export function matchClientForCall(
 ): MatchResult {
   const normalized = normalizePhone(externalNumber);
   if (!normalized) {
-    return { status: "unmatched", client_id: null, case_id: null, reason: "invalid_number" };
+    return {
+      status: "unmatched",
+      client_id: null,
+      case_id: null,
+      reason: "invalid_number",
+    };
   }
 
-  const internalNumbers = new Set(companyLines.map((line) => normalizePhone(line.number)));
+  const internalNumbers = new Set(
+    companyLines.map((line) => normalizePhone(line.number)),
+  );
   if (internalNumbers.has(normalized)) {
-    return { status: "internal", client_id: null, case_id: null, reason: "company_line" };
+    return {
+      status: "internal",
+      client_id: null,
+      case_id: null,
+      reason: "company_line",
+    };
   }
 
   const candidateHash = hashPhoneNumber(normalized);
-  const matches = clients.filter((client) => client.phone_hashes.includes(candidateHash ?? ""));
+  const matches = clients.filter((client) =>
+    client.phone_hashes.includes(candidateHash ?? ""),
+  );
 
   if (matches.length > 1) {
     return {
@@ -227,7 +310,12 @@ export function matchClientForCall(
   }
 
   if (matches.length === 0) {
-    return { status: "unmatched", client_id: null, case_id: null, reason: "no_client_match" };
+    return {
+      status: "unmatched",
+      client_id: null,
+      case_id: null,
+      reason: "no_client_match",
+    };
   }
 
   const client = matches[0];
@@ -264,7 +352,11 @@ export function processCallEvent(
 
   const existing = CALL_STORE.get(callId) ?? {};
   const merged = buildCallRecord(existing, event);
-  merged.match = matchClientForCall(merged.external_number ?? null, clients, companyLines);
+  merged.match = matchClientForCall(
+    merged.external_number ?? null,
+    clients,
+    companyLines,
+  );
   merged.match_status = merged.match.status;
   CALL_STORE.set(callId, merged);
   return merged;

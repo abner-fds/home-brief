@@ -17,7 +17,10 @@ describe("call matching rules", () => {
 
   it("hashes phone numbers consistently with client hashes", () => {
     const number = "+12105550177";
-    const expected = crypto.createHash("sha256").update("12105550177").digest("hex");
+    const expected = crypto
+      .createHash("sha256")
+      .update("12105550177")
+      .digest("hex");
     expect(hashPhoneNumber(number)).toBe(expected);
   });
 
@@ -34,14 +37,33 @@ describe("call matching rules", () => {
       name: "Maria Lopez",
       phone_hashes: [hashPhoneNumber("+12105550178") ?? ""],
       cases: [
-        { case_id: "CASE-1", status: "closed", opened_at: "2025-01-01", closed_at: "2025-05-01" },
-        { case_id: "CASE-2", status: "open", opened_at: "2026-06-11", closed_at: null },
-        { case_id: "CASE-3", status: "open", opened_at: "2026-07-01", closed_at: null },
+        {
+          case_id: "CASE-1",
+          status: "closed",
+          opened_at: "2025-01-01",
+          closed_at: "2025-05-01",
+        },
+        {
+          case_id: "CASE-2",
+          status: "open",
+          opened_at: "2026-06-11",
+          closed_at: null,
+        },
+        {
+          case_id: "CASE-3",
+          status: "open",
+          opened_at: "2026-07-01",
+          closed_at: null,
+        },
       ],
     };
 
     expect(
-      matchClientForCall("+12105550178", [client], [{ number: "+14155550100", label: "Main line" }]),
+      matchClientForCall(
+        "+12105550178",
+        [client],
+        [{ number: "+14155550100", label: "Main line" }],
+      ),
     ).toMatchObject({
       status: "matched",
       client_id: "C-101",
@@ -50,9 +72,21 @@ describe("call matching rules", () => {
   });
 
   it("keeps the newest non-null values on a call record", () => {
-    const first = buildCallRecord({}, { call_id: "7001", state: "ringing", direction: "inbound" });
-    const second = buildCallRecord(first, { call_id: "7001", state: "connected", date_ended: null });
-    const third = buildCallRecord(second, { call_id: "7001", state: "hangup", date_ended: 1234, duration: 10 });
+    const first = buildCallRecord(
+      {},
+      { call_id: "7001", state: "ringing", direction: "inbound" },
+    );
+    const second = buildCallRecord(first, {
+      call_id: "7001",
+      state: "connected",
+      date_ended: null,
+    });
+    const third = buildCallRecord(second, {
+      call_id: "7001",
+      state: "hangup",
+      date_ended: 1234,
+      duration: 10,
+    });
 
     expect(third.state).toBe("hangup");
     expect(third.date_ended).toBe(1234);
