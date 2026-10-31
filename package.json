@@ -1,0 +1,17 @@
+{
+  "name": "call-about",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc --project tsconfig.json",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
